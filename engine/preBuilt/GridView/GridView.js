@@ -3,7 +3,7 @@ function GridView({
   items = [],
   width = "120px",
   height = "100px",
-  gap = "10px", // for both row and column
+  gap = "0px", // for both row and column
   margin = "10px",
   paddingTop = "0px",
   paddingBottom = "0px",
@@ -16,7 +16,7 @@ function GridView({
     .class("grid-view-container")
     .style({
       display: "grid",
-      gridTemplateColumns: `repeat(auto-fill, minmax(${width}, 1fr))`,
+      gridTemplateColumns: `repeat(auto-fill, minmax(${width},.475fr))`,
       gap: gap,
       margin: margin,
       paddingTop,
