@@ -1,0 +1,99 @@
+# Installation
+
+### 1. Use the following `index.html` as your main app file:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CarbonView Framework</title>
+
+  <!-- UIKit CSS -->
+  <link rel="stylesheet" href="uikit/css/beer.css">
+  <link rel="stylesheet" href="engine/preBuilt/ActionSheet/ActionSheet.css">
+  <link rel="stylesheet" href="engine/preBuilt/Drawer/Drawer.css">
+  <link rel="stylesheet" href="engine/preBuilt/GridView/GridView.css">
+  <link rel="stylesheet" href="engine/preBuilt/ScrollView/ScrollView.css">
+
+  <!-- Protection Styles -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      touch-action: manipulation;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Core -->
+  <script src="engine/core/carbon.buildApi.js"></script>
+  <script src="engine/core/loadExternal.js"></script>
+  <script type="module" src="uikit/js/beer.min.js"></script>
+
+  <!-- Components -->
+  <script src="engine/preBuilt/ActionSheet/ActionSheet.js"></script>
+  <script src="engine/preBuilt/ColumnView/ColumnView.js"></script>
+  <script src="engine/preBuilt/Drawer/Drawer.js"></script>
+  <script src="engine/preBuilt/GridView/GridView.js"></script>
+  <script src="engine/preBuilt/NativeToast/NativeToast.js"></script>
+  <script src="engine/preBuilt/PageView/PageView.js"></script>
+  <script src="engine/preBuilt/ScrollView/ScrollView.js"></script>
+  <script src="engine/preBuilt/SlideView/SlideView.js"></script>
+
+  <!-- Themes -->
+  <script src="engine/themes/themes.js"></script>
+  <script src="engine/themes/themes.config.js"></script>
+  <script type="module" src="uikit/js/material-dynamic-colors.min.js"></script>
+
+  <!-- Activate Theme -->
+  <script>
+    Themes.apply("light");
+  </script>
+
+  <!-- Protection Scripts -->
+  <script>
+    // Disable context menu
+    window.addEventListener("contextmenu", e => e.preventDefault());
+
+    // Disable copy, cut, paste
+    ["copy", "cut", "paste"].forEach(evt =>
+      document.addEventListener(evt, e => e.preventDefault())
+    );
+
+    // Disable selection
+    document.addEventListener("selectstart", e => e.preventDefault());
+
+    // Disable gesture zoom
+    document.addEventListener("gesturestart", e => e.preventDefault());
+
+    // Disable multi-touch zoom
+    document.addEventListener("touchstart", e => {
+      if (e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+  </script>
+
+  <!-- Load Custom Views -->
+  <script src="view/Demo/Drawer.js" defer></script>
+
+</body>
+</html>
+```
+### **Tutorial**
+First need to know about its structures.
+**engine** is main framework. This contain three folder. Click on them for see there documention.
+- [core](/Doc/core.md)
+- [preBuilt](/Doc/preBuilt.md)
+- [themes](/Doc/themes.md)
+
+
