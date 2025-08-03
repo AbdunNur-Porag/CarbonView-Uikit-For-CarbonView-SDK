@@ -9,3 +9,4 @@ here are there name:
 - [NativeToast](/Doc/prebuilt/NativeToast.md)
 - [PageView](/Doc/prebuilt/PageView.md)
 - [SlideView](/Doc/prebuilt/SlideView.md)
+- [AppBar](/Doc/prebuilt/AppBar.md)
