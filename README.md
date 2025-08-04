@@ -11,4 +11,9 @@ First need to know about its structures.
 - [preBuilt](/Doc/preBuilt.md)
 - [themes](/Doc/themes.md)
 
+# Important 
+See release folder there you get example app,bundle,and latest release swb.
+
+
+
 
