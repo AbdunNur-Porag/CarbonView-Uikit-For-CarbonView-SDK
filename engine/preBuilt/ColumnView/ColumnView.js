@@ -1,69 +1,91 @@
 function ColumnView({
   id = "columnView",
-  items = [], // array of strings or create() objects
-  columns = 2, // how many fixed columns in a row
-  Width = "120px",
-  Height = "100px",
-  MarginBetween = "10px",
-  MarginLeft = "10px",
-  MarginTop = "10px",
-  MarginRight = "10px",
-  MarginBottom = "10px",
-  LineGapTop = "0px",
-  LineGapBottom = "0px",
+  className = "column-view-container",
+  tag = "div",
+  items = [],
+  columns = 2,
+  width = "120px",
+  height = "100px",
+  gap = "12px",
+  sideMargin = "16px", // replaces MarginLeft & MarginRight
+  marginTop = "10px",
+  marginBottom = "10px",
+  lineGapTop = "0px",
+  lineGapBottom = "0px",
+  maxWidth = null,
+  style = {},
 }) {
-  const container = create("div")
-    .id(id)
-    .class("column-view-container")
+  // Wrapper ensures consistent spacing on sides
+  const wrapper = create("div")
+    .class("column-view-wrapper")
     .style({
-      display: "grid",
-      gridTemplateColumns: `repeat(${columns}, minmax(${Width}, 1fr))`,
-      columnGap: MarginBetween,
-      rowGap: MarginBetween,
-      marginLeft: MarginLeft,
-      marginTop: MarginTop,
-      marginRight: MarginRight,
-      marginBottom: MarginBottom,
-      paddingTop: "0px",
-      paddingBottom: "0px",
+      paddingLeft: sideMargin,
+      paddingRight: sideMargin,
+      marginTop,
+      marginBottom,
+      boxSizing: "border-box",
+      width: "100%",
+      ...(maxWidth ? { maxWidth, marginLeft: "auto", marginRight: "auto" } : {}),
     });
 
+  // Inner grid container
+  const container = create(tag)
+    .id(id)
+    .class(className)
+    .style({
+      display: "grid",
+      gridTemplateColumns: `repeat(${columns}, 1fr)`,
+      columnGap: gap,
+      rowGap: gap,
+      width: "100%",
+      boxSizing: "border-box",
+      ...style,
+    });
+
+  // Children injection
   const children = {};
   items.forEach((item, index) => {
+    const key = `item${index}`;
+    let child;
+
     if (typeof item === "string") {
-      children[`item${index}`] = create("div")
+      child = create("div")
         .class("column-view-item")
-        .text(item)
-        .style({
-          height: Height,
-          width: "100%",
-        });
-    } else if (item && item.el instanceof HTMLElement) {
-      item.class("column-view-item").style({
-        height: Height,
-        width: "100%",
-      });
-      children[`item${index}`] = item;
+        .text(item);
+    } else if (item?.el instanceof HTMLElement) {
+      child = item.class("column-view-item");
+    } else {
+      return; // skip invalid
     }
+
+    child.style({
+      height,
+      width: "100%",
+      boxSizing: "border-box",
+    });
+
+    children[key] = child;
   });
 
   container.children(children);
+  wrapper.children({ ColumnGrid: container });
 
-  // Adjust padding for multi-row layouts if needed
+  // Dynamic top/bottom padding for multi-row adjustment
   setTimeout(() => {
-    const rowHeight = container.el.firstChild?.offsetHeight || 0;
+    const first = container.el.firstChild;
+    if (!first) return;
+
+    const rowHeight = first.offsetHeight;
     const totalHeight = container.el.offsetHeight;
-    const rows = Math.floor(
-      totalHeight / (parseInt(Height) + parseInt(MarginBetween))
-    );
+    const rows = totalHeight / (parseInt(height) + parseInt(gap));
 
     if (rows > 1) {
-      container.style({
-        paddingTop: LineGapTop,
-        paddingBottom: LineGapBottom,
+      wrapper.style({
+        paddingTop: lineGapTop,
+        paddingBottom: lineGapBottom,
       });
     }
-  }, 10);
+  }, 0);
 
-  return container;
+  return wrapper;
 }

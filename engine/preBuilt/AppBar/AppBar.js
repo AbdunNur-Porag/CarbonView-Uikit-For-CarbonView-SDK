@@ -9,30 +9,33 @@ function AppBar({
   CenterStyle = {},
   RightStyle = {},
 }) {
-  // Elevation presets
   const shadows = {
     0: "none",
-    1: "0 2px 4px rgba(0,0,0,0.60)",
-    2: "0 4px 8px rgba(0,0,0,0.15)",
-    3: "0 6px 12px rgba(0,0,0,0.2)",
-    4: "0 8px 16px rgba(0,0,0,0.25)",
-    5: "0 12px 24px rgba(0,0,0,0.3)",
+    1: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+    2: "0px 4px 6px rgba(0, 0, 0, 0.25)",
+    3: "0px 6px 10px rgba(0, 0, 0, 0.3)",
+    4: "0px 8px 12px rgba(0, 0, 0, 0.35)",
+    5: "0px 12px 16px rgba(0, 0, 0, 0.4)",
   };
 
   const Header = create("header")
     .class(["appbar"])
     .style({
       width: "100%",
-      height:"80px",
-      background: "#ffffff",
+      height: "56px", // Native toolbar height
+      backgroundColor: "#ffffff",
       boxShadow: shadows[Elevation] || shadows[1],
+      display: "flex",
+      alignItems: "center",
+      fontFamily: "Roboto, sans-serif",
+      transition: "box-shadow 0.2s ease-in-out",
       ...(Fixed
         ? {
             position: "fixed",
             top: "0",
             left: "0",
             right: "0",
-            zIndex: "999",
+            zIndex: "1100",
           }
         : {}),
       ...Style,
@@ -44,7 +47,9 @@ function AppBar({
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      padding: "0px",
+      width: "100%",
+      height: "100%",
+      padding: "0 4px", // tighter, closer to native
     })
     .children({
       Left: create("div")
@@ -52,7 +57,11 @@ function AppBar({
         .style({
           display: "flex",
           alignItems: "center",
-          gap: "0.5rem",
+          justifyContent: "flex-start",
+          minWidth: "56px",
+          height: "100%",
+          padding: "0 8px",
+          gap: "8px",
           ...LeftStyle,
         })
         .children(Left),
@@ -64,7 +73,15 @@ function AppBar({
           alignItems: "center",
           justifyContent: "center",
           flex: "1",
-          gap: "0.5rem",
+          height: "100%",
+          textAlign: "center",
+          fontSize: "20px",
+          fontWeight: "500",
+          color: "#212121",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          pointerEvents: "none", // ensures only side elements are clickable
           ...CenterStyle,
         })
         .children(Center),
@@ -74,7 +91,11 @@ function AppBar({
         .style({
           display: "flex",
           alignItems: "center",
-          gap: "0.5rem",
+          justifyContent: "flex-end",
+          minWidth: "56px",
+          height: "100%",
+          padding: "0 8px",
+          gap: "8px",
           ...RightStyle,
         })
         .children(Right),
