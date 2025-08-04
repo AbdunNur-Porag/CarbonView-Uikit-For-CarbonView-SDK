@@ -1,28 +1,47 @@
 function GridView({
   id = "gridView",
+  className = "grid-view-container",
+  tag = "div",
   items = [],
   width = "120px",
   height = "100px",
-  gap = "0px", // for both row and column
-  margin = "10px",
+  gap = "12px",
+  sideMargin = "16px",
   paddingTop = "0px",
   paddingBottom = "0px",
   lineGapTop = "0px",
   lineGapBottom = "0px",
-  onItemClick = null, // optional callback(index, element)
+  maxWidth = null,
+  onItemClick = null,
+  style = {}, // allow user to pass custom styles
 }) {
-  const container = create("div")
-    .id(id)
-    .class("grid-view-container")
+  // Outer wrapper — handles consistent left/right spacing and optional max width
+  const wrapper = create("div")
+    .class("grid-view-wrapper")
     .style({
-      display: "grid",
-      gridTemplateColumns: `repeat(auto-fill, minmax(${width},.475fr))`,
-      gap: gap,
-      margin: margin,
+      paddingLeft: sideMargin,
+      paddingRight: sideMargin,
       paddingTop,
       paddingBottom,
+      width: "100%",
+      boxSizing: "border-box",
+      ...(maxWidth ? { maxWidth, margin: "0 auto" } : {}),
     });
 
+  // Inner grid layout container
+  const container = create(tag)
+    .id(id)
+    .class(className)
+    .style({
+      display: "grid",
+      width: "100%",
+      gridTemplateColumns: `repeat(auto-fill, minmax(${width}, 1fr))`,
+      gap,
+      boxSizing: "border-box",
+      ...style,
+    });
+
+  // Populate grid items
   const children = {};
   items.forEach((item, index) => {
     const key = `item${index}`;
@@ -32,10 +51,10 @@ function GridView({
       gridItem = create("div")
         .class("grid-view-item")
         .text(item);
-    } else if (item && item.el instanceof HTMLElement) {
+    } else if (item?.el instanceof HTMLElement || item?.el instanceof Element) {
       gridItem = item.class("grid-view-item");
     } else {
-      return;
+      return; // invalid item, skip
     }
 
     gridItem.style({
@@ -51,9 +70,11 @@ function GridView({
     children[key] = gridItem;
   });
 
+  // Final assembly
   container.children(children);
+  wrapper.children({ Grid: container });
 
-  // Auto padding adjustment if more than one row
+  // Handle dynamic padding if multi-row
   setTimeout(() => {
     const first = container.el.firstChild;
     if (!first) return;
@@ -63,12 +84,12 @@ function GridView({
     const estimatedRows = totalHeight / (parseInt(height) + parseInt(gap));
 
     if (estimatedRows > 1) {
-      container.style({
+      wrapper.style({
         paddingTop: lineGapTop,
         paddingBottom: lineGapBottom,
       });
     }
-  }, 10);
+  }, 0); // immediate
 
-  return container;
+  return wrapper;
 }
